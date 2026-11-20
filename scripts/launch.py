@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 import sys
 import time
 from datetime import datetime, timezone
@@ -60,6 +61,7 @@ def load_settings() -> dict[str, Any]:
     return {
         "api_key": setting("RUNPOD_API_KEY"),
         "image": setting("RUNPOD_IMAGE"),
+        "bootstrap_url": setting("RUNPOD_BOOTSTRAP_URL"),
         "gpu": setting("RUNPOD_GPU", "NVIDIA GeForce RTX 3090"),
         "cloud": setting("RUNPOD_CLOUD", "COMMUNITY").upper(),
         "region": setting("RUNPOD_REGION").upper(),
@@ -87,10 +89,11 @@ def validate_settings(s: dict[str, Any]) -> None:
             "RUNPOD_API_KEY is not set. Create a key at "
             "https://console.runpod.io/user/credentials and put it in .env."
         )
-    if s["image"] in PLACEHOLDER_IMAGES or not s["image"]:
+    if not s["bootstrap_url"] and (s["image"] in PLACEHOLDER_IMAGES or not s["image"]):
         die(
             "RUNPOD_IMAGE is not set. Use the GHCR image built by GitHub Actions, "
-            "for example ghcr.io/<your-github-user>/<repo>:latest."
+            "for example ghcr.io/<your-github-user>/<repo>:latest, or set "
+            "RUNPOD_BOOTSTRAP_URL for the public-base bootstrap path."
         )
     if s["cloud"] not in {"SECURE", "COMMUNITY"}:
         die("RUNPOD_CLOUD must be SECURE or COMMUNITY.")
@@ -222,7 +225,14 @@ def build_pod_body(
     }
     if data_center:
         body["dataCenterIds"] = [data_center]
-    if s["registry_id"]:
+
+    if s.get("bootstrap_url"):
+        # Use the public ComfyUI image and bootstrap the GGUF/model setup from
+        # the public GitHub repo. No GHCR registry credential is needed.
+        body["image"] = "runpod/comfyui:latest"
+        body["entrypoint"] = ["/bin/bash", "-lc"]
+        body["cmd"] = [f"curl -fsSL {shlex.quote(s['bootstrap_url'])} | bash"]
+    elif s["registry_id"]:
         body["registry"] = s["registry_id"]
     return body
 
