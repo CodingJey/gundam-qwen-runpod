@@ -164,7 +164,7 @@ def candidate_datacenters(s: dict[str, Any], volume: dict[str, Any] | None) -> l
     ordered = [data_center for _, data_center in candidates]
     if ordered:
         log(
-            "RTX 3090 availability: "
+            f"{s['gpu']} availability: "
             + ", ".join(ordered[:8])
             + (" ..." if len(ordered) > 8 else "")
         )
