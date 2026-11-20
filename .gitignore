@@ -1,0 +1,8 @@
+.env
+.runpod-state.json
+outputs/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store

@@ -1,0 +1,15 @@
+# Keep all large, persistent files on /workspace (the Runpod volume disk or
+# network volume). ComfyUI itself stays in the container image.
+gundam:
+  base_path: /workspace/models
+  checkpoints: checkpoints
+  diffusion_models: diffusion_models
+  text_encoders: text_encoders
+  clip_vision: clip_vision
+  style_models: style_models
+  embeddings: embeddings
+  loras: loras
+  controlnet: controlnet
+  unet: unet
+  vae: vae
+  upscale_models: upscale_models

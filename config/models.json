@@ -1,0 +1,46 @@
+{
+  "hf_base_url": "https://huggingface.co",
+  "required": [
+    {
+      "name": "qwen-image-Q4_K_M.gguf",
+      "dest": "diffusion_models",
+      "repo": "city96/Qwen-Image-gguf",
+      "file": "qwen-image-Q4_K_M.gguf",
+      "min_bytes": 12000000000,
+      "size": 13065746976
+    },
+    {
+      "name": "Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf",
+      "dest": "text_encoders",
+      "repo": "unsloth/Qwen2.5-VL-7B-Instruct-GGUF",
+      "file": "Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf",
+      "min_bytes": 4400000000,
+      "size": 4683072384
+    },
+    {
+      "name": "qwen_image_vae.safetensors",
+      "dest": "vae",
+      "repo": "Comfy-Org/Qwen-Image_ComfyUI",
+      "file": "split_files/vae/qwen_image_vae.safetensors",
+      "min_bytes": 240000000,
+      "size": 253806246
+    },
+    {
+      "name": "Qwen-Image-Lightning-8steps-V1.0.safetensors",
+      "dest": "loras",
+      "repo": "lightx2v/Qwen-Image-Lightning",
+      "file": "Qwen-Image-Lightning-8steps-V1.0.safetensors",
+      "min_bytes": 1500000000,
+      "size": 1698951104
+    }
+  ],
+  "optional": [
+    {
+      "name": "gundam_qwen_image.safetensors",
+      "dest": "loras",
+      "url_env": "GUNDAM_LORA_URL",
+      "filename_env": "GUNDAM_LORA_FILENAME",
+      "min_bytes": 100000
+    }
+  ]
+}

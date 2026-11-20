@@ -1,0 +1,13 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+.runpod-state.json
+outputs
+__pycache__
+*.pyc
+.pytest_cache
+.venv
+venv
+README.md
