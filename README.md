@@ -204,6 +204,26 @@ python3 scripts/generate.py --no-style-lora
 - `--dry-run` prints the JSON graph without contacting the pod.
 - It reads `COMFYUI_URL`/`BASIC_AUTH_*` from `.env`, or the URL saved by `launch.py`.
 
+### Performance: first run vs warm runs
+
+The first generation after a fresh pod/model load is slow because ComfyUI reads the 12 GB Q4 transformer and 4.7 GB text encoder from disk and initializes the GGUF/VRAM stack. On the A40 48 GB used in this run, that first run took about 3-4 minutes.
+
+Warm runs measured on the same pod:
+
+| Settings | Warm generation |
+| - | -: |
+| 512x512, 4 steps, Lightning | ~11 s |
+| 1024x1024, 8 steps, Lightning | ~26 s |
+
+To keep it in the warm range:
+
+- Do **not** click **Unload Models** in the ComfyUI toolbar.
+- Do not restart the pod between prompts.
+- Use the **`qwen_image_base`** workflow: Lightning 8-step, `steps=8`, `cfg=1.0`, `euler` / `simple`, `1024x1024`.
+- For fast composition drafts, use `512x512` or `768x768` with 4 steps; keep `qwen_image_base` and change the `EmptySD3LatentImage` / `KSampler` values.
+- Use `1328x1328` or 20-30 steps only for a final pass. Those are the settings that legitimately take multiple minutes.
+- Installing the 4-step Lightning LoRA is another ~1.5 GB download and can bring a 1024x1024 run closer to ~15 s. The 8-step file is the safe default.
+
 ## 6. Networking and security
 
 ### HTTP proxy
